@@ -6,6 +6,7 @@ router.get("/hello-blogs", (req, res, next) => {
   res.json({ message: "Hello from express" });
 });
 
+//GET BLOGS
 router.get("/all-blogs", async (req, res, next) => {
   const limit = Number(req.query.limit);
   const skip = Number(req.query.page);
@@ -45,20 +46,11 @@ router.get("/all-blogs", async (req, res, next) => {
 
 router.post("/blog-submit", async (req, res) => {
   try {
-    const blogIsValid = serverCheckBlogIsValid(req.body);
-
-    if (!blogIsValid) {
-      res.status(400).json({
-        message:
-          "To submit a blog you must include Title, Author, Category, and Text.",
-        success: false,
-      });
-      return;
-    }
+    
 
     const collection = await blogsDB().collection("posts50");
     const sortedBlogArr = await collection.find({}).sort({ id: 1 }).toArray();
-    const lastBlog = sortedBlogArr[sortedBlogArr.length - 1];
+    const lastBlog = sortedBlogArr.length + 1;
     const title = req.body.title;
     const text = req.body.text;
     const author = req.body.author;
